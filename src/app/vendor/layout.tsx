@@ -44,7 +44,10 @@ export default function VendorLayout({
     );
 
     return (
-        <div className="min-h-screen bg-background text-foreground pt-24">
+        <div className="min-h-screen bg-background/95 text-foreground pt-24 selection:bg-pink-500/30">
+            {/* Background Texture */}
+            <div className="fixed inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none -z-10" />
+
             <FloatingNav items={vendorLinks} rightSlot={rightSlot} logoHref="/vendor" />
 
             <main className="container mx-auto px-4 pb-10">
