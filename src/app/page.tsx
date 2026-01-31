@@ -229,68 +229,58 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-card border-t border-border pt-20 pb-10">
-        <div className="container mx-auto px-6">
+      <footer className="relative bg-gradient-to-br from-pink-600 via-primary to-purple-800 text-white pt-24 pb-12 overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[600px] h-[600px] bg-white/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-[500px] h-[500px] bg-purple-900/20 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="container mx-auto px-6 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-            <div className="space-y-6">
-              <Link href="/" className="flex items-center gap-2 group">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">S</div>
-                <span className="font-serif text-2xl font-bold tracking-tight">SmartRent</span>
+            <div className="md:col-span-1 space-y-6">
+              <Link href="/" className="flex items-center gap-3 group">
+                <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-primary font-bold text-2xl shadow-xl shadow-black/10 group-hover:scale-110 transition-transform">S</div>
+                <span className="font-serif text-3xl font-bold tracking-tight text-white">SmartRent</span>
               </Link>
-              <p className="text-muted-foreground leading-relaxed">
-                The next-generation platform for rental management.
-                Empowering creators with instant access to premium gear.
+              <p className="text-pink-100/80 leading-relaxed text-lg">
+                The next-generation rental platform.
               </p>
-              <div className="flex gap-4">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-primary hover:text-white transition-colors cursor-pointer">
-                    <Globe size={14} />
-                  </div>
-                ))}
+              <div className="flex gap-4 pt-2">
+                {/* Social placeholders */}
+                <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white cursor-pointer hover:bg-white hover:text-primary transition-all duration-300">
+                  <Globe size={18} />
+                </div>
               </div>
             </div>
 
+            {/* Filler Div */}
+            <div className="hidden md:block"></div>
+
             <div>
-              <h4 className="font-bold text-lg mb-6">Platform</h4>
-              <ul className="space-y-4 text-muted-foreground">
-                <li><Link href="/browse" className="hover:text-primary transition-colors">Browse Gear</Link></li>
-                <li><Link href="#" className="hover:text-primary transition-colors">Comparison</Link></li>
-                <li><Link href="#" className="hover:text-primary transition-colors">Pricing</Link></li>
-                <li><Link href="#" className="hover:text-primary transition-colors">Enterprise</Link></li>
+              <h4 className="font-bold text-xl mb-6 text-white tracking-wide">Explore</h4>
+              <ul className="space-y-4 text-pink-100/70">
+                <li><Link href="/" className="hover:text-white hover:translate-x-1 transition-all inline-block">Home</Link></li>
+                <li><Link href="/browse" className="hover:text-white hover:translate-x-1 transition-all inline-block">Browse Gear</Link></li>
+                <li><Link href="/login" className="hover:text-white hover:translate-x-1 transition-all inline-block">Login</Link></li>
+                <li><Link href="/signup" className="hover:text-white hover:translate-x-1 transition-all inline-block">Create Account</Link></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-bold text-lg mb-6">Company</h4>
-              <ul className="space-y-4 text-muted-foreground">
-                <li><Link href="#" className="hover:text-primary transition-colors">About Us</Link></li>
-                <li><Link href="#" className="hover:text-primary transition-colors">Careers</Link></li>
-                <li><Link href="#" className="hover:text-primary transition-colors">Blog</Link></li>
-                <li><Link href="#" className="hover:text-primary transition-colors">Contact</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-lg mb-6">Stay Updated</h4>
-              <p className="text-muted-foreground mb-4">Subscribe to our newsletter for the latest gear drops.</p>
-              <div className="flex gap-2">
+              <h4 className="font-bold text-xl mb-6 text-white tracking-wide">Stay Updated</h4>
+              <p className="text-pink-100/70 mb-6">Join our newsletter for exclusive gear drops.</p>
+              <div className="flex flex-col gap-3">
                 <input
                   type="email"
                   placeholder="Enter your email"
-                  className="flex-1 bg-background border border-border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  className="bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-sm text-white placeholder:text-pink-100/40 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white/20 transition-all backdrop-blur-md"
                 />
-                <Button size="sm">Subscribe</Button>
+                <Button size="lg" className="bg-white text-primary hover:bg-pink-50 font-bold shadow-lg shadow-black/5">Subscribe</Button>
               </div>
             </div>
           </div>
 
-          <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
-            <p>&copy; 2026 SmartRent Inc. All rights reserved.</p>
-            <div className="flex gap-6">
-              <Link href="#" className="hover:text-foreground transition-colors">Privacy Policy</Link>
-              <Link href="#" className="hover:text-foreground transition-colors">Terms of Service</Link>
-              <Link href="#" className="hover:text-foreground transition-colors">Cookies</Link>
-            </div>
+          <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-pink-100/60 font-light">
+            <p>&copy; 2026 SmartRent Inc.</p>
           </div>
         </div>
       </footer>
