@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
 
+import ImageUpload from "@/components/ui/image-upload";
+
 export default function AddProductPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
@@ -16,12 +18,20 @@ export default function AddProductPage() {
         basePrice: "",
         rentalPeriod: "daily",
         totalStock: "",
-        images: "", // Comma separated string for now
+        images: [] as string[],
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
+
+    const handleImageChange = (url: string) => {
+        setFormData(prev => ({ ...prev, images: [...prev.images, url] }));
+    }
+
+    const handleImageRemove = (url: string) => {
+        setFormData(prev => ({ ...prev, images: prev.images.filter((image) => image !== url) }));
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -34,7 +44,7 @@ export default function AddProductPage() {
                     ...formData,
                     basePrice: Number(formData.basePrice),
                     totalStock: Number(formData.totalStock),
-                    images: formData.images.split(",").map((s) => s.trim()).filter(Boolean),
+                    // images is already an array in formData now
                 }),
             });
 
@@ -151,21 +161,15 @@ export default function AddProductPage() {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">Images</label>
-                                <div className="border-2 border-dashed border-border rounded-xl p-6 transition-colors hover:border-primary/50 bg-muted/10 text-center">
-                                    <Input
-                                        name="images"
-                                        placeholder="https://example.com/img1.jpg, https://example.com/img2.jpg"
-                                        value={formData.images}
-                                        onChange={handleChange}
-                                        className="bg-transparent border-none shadow-none text-center placeholder:text-muted-foreground/50 focus-visible:ring-0"
-                                    />
-                                    <p className="text-xs text-muted-foreground mt-2">
-                                        Paste comma-separated URLs (e.g. Unsplash links).
-                                        <br />
-                                        <span className="opacity-50">File upload coming soon.</span>
-                                    </p>
-                                </div>
+                                <label className="text-sm font-medium">Product Images</label>
+                                <ImageUpload
+                                    value={formData.images}
+                                    onChange={handleImageChange}
+                                    onRemove={handleImageRemove}
+                                />
+                                <p className="text-xs text-muted-foreground">
+                                    Upload high-quality images of your gear.
+                                </p>
                             </div>
 
                             <div className="pt-4 flex gap-4">
@@ -205,8 +209,8 @@ export default function AddProductPage() {
                         <div className="border border-border p-4 rounded-xl bg-card shadow-sm opacity-80 pointer-events-none grayscale-[0.2]">
                             <p className="text-xs font-bold text-muted-foreground uppercase mb-2 tracking-wide">Preview Card</p>
                             <div className="aspect-[4/3] bg-muted rounded-lg mb-3 overflow-hidden">
-                                {formData.images.split(',')[0] ? (
-                                    <img src={formData.images.split(',')[0]} className="w-full h-full object-cover" />
+                                {formData.images[0] ? (
+                                    <img src={formData.images[0]} className="w-full h-full object-cover" />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-muted-foreground">No Image</div>
                                 )}
