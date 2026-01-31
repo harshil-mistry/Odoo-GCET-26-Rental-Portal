@@ -97,27 +97,23 @@ export default function AddProductPage() {
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium">Category</label>
-                                    <Input
-                                        name="category"
-                                        placeholder="Category"
-                                        value={formData.category}
-                                        onChange={handleChange}
-                                        required
-                                        className="h-11 bg-muted/30"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium">Rental Period</label>
                                     <div className="relative">
                                         <select
-                                            name="rentalPeriod"
-                                            value={formData.rentalPeriod}
+                                            name="category"
+                                            value={formData.category}
                                             onChange={handleChange}
+                                            required
                                             className="flex h-11 w-full rounded-md border border-input bg-muted/30 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring appearance-none"
                                         >
-                                            <option value="hourly">Hourly Rate</option>
-                                            <option value="daily">Daily Rate</option>
-                                            <option value="weekly">Weekly Rate</option>
+                                            <option value="" disabled>Select Category</option>
+                                            <option value="Cameras">Cameras</option>
+                                            <option value="Lenses">Lenses</option>
+                                            <option value="Drones">Drones</option>
+                                            <option value="Lighting">Lighting</option>
+                                            <option value="Audio">Audio</option>
+                                            <option value="Studio">Studio Equipment</option>
+                                            <option value="Accessories">Accessories</option>
+                                            <option value="Others">Others</option>
                                         </select>
                                         <div className="absolute right-3 top-3.5 pointer-events-none opacity-50">
                                             <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -125,6 +121,14 @@ export default function AddProductPage() {
                                             </svg>
                                         </div>
                                     </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Rental Period</label>
+                                    <Input
+                                        value="Daily Rate"
+                                        disabled
+                                        className="h-11 bg-muted/30 text-muted-foreground"
+                                    />
                                 </div>
                             </div>
 

@@ -99,19 +99,23 @@ export default function BrowsePage() {
                             <Filter size={14} />
                             <span className="hidden sm:inline">Filter:</span>
                         </div>
-                        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-                            {categories.map(c => (
-                                <button
-                                    key={c}
-                                    onClick={() => setCategory(c)}
-                                    className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${category === c
-                                            ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
-                                            : "bg-muted/50 text-muted-foreground hover:bg-muted"
-                                        }`}
-                                >
-                                    {c.charAt(0).toUpperCase() + c.slice(1)}
-                                </button>
-                            ))}
+                        <div className="relative min-w-[200px]">
+                            <select
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                                className="w-full h-12 pl-4 pr-10 appearance-none bg-background/50 border border-border/50 rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/20 focus:outline-none cursor-pointer"
+                            >
+                                {categories.map(c => (
+                                    <option key={c} value={c}>
+                                        {c.charAt(0).toUpperCase() + c.slice(1)}
+                                    </option>
+                                ))}
+                            </select>
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-50">
+                                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </div>
                         </div>
                     </div>
                 </motion.div>
