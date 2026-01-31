@@ -16,10 +16,12 @@
 - [ ] **Authentication & Authorization**
     - [x] Implement JWT Auth API (Signup/Login)
     - [x] Create Middleware for Role Protection (Customer, Vendor, Admin)
+    - [x] Implement Login & Signup Pages
+    - [x] Create Navigation Bar with Auth State
 - [ ] **Vendor Dashboard (Inventory Management)**
-    - [/] Create Product Listing Page
-    - [/] Implement Add/Edit Product Forms
-    - [ ] Implement Delete Product
+    - [x] Create Product Listing Page
+    - [x] Implement Add/Edit Product Forms
+    - [x] Implement Delete Product
 - [ ] **Customer Journey (Booking Flow)**
     - [ ] Create Product Browse Page with Filters
     - [ ] Implement Product Details Page

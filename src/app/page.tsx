@@ -1,11 +1,6 @@
-import { ThemeToggle } from "@/components/ui/theme-toggle";
-
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground transition-colors duration-300">
-      <nav className="absolute top-4 right-4">
-        <ThemeToggle />
-      </nav>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground transition-colors duration-300 pt-20">
 
       <main className="text-center space-y-8 p-4 max-w-2xl">
         <div className="space-y-4">

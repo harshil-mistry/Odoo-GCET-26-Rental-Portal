@@ -4,6 +4,26 @@ import Product from "@/models/Product";
 import { verifyToken } from "@/lib/jwt";
 import { cookies } from "next/headers";
 
+// GET: Fetch Single Product
+export async function GET(
+    req: Request,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    try {
+        await connectDB();
+        const { id } = await params;
+        const product = await Product.findById(id);
+
+        if (!product) {
+            return NextResponse.json({ message: "Product not found" }, { status: 404 });
+        }
+
+        return NextResponse.json(product, { status: 200 });
+    } catch (error) {
+        return NextResponse.json({ message: "Error fetching product" }, { status: 500 });
+    }
+}
+
 // PUT: Update Product
 export async function PUT(
     req: Request,
