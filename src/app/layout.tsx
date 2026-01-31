@@ -4,6 +4,8 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/navbar";
 
+import { GlobalBackground } from "@/components/ui/global-background";
+
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" }); // Premium Serif
@@ -27,8 +29,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar />
-          {children}
+          <GlobalBackground />
+          <div className="relative z-10">
+            <Navbar />
+            {children}
+          </div>
         </ThemeProvider>
       </body>
     </html>

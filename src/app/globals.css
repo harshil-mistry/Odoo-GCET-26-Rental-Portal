@@ -81,6 +81,10 @@
   animation: scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite;
 }
 
+.animate-pulse-slow {
+  animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 .dark {
   --background: #0a0a0a;
   --foreground: #ededed;
