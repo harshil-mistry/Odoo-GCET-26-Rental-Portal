@@ -4,7 +4,9 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/navbar";
 
+import { CartProvider } from "@/context/cart-context";
 import { GlobalBackground } from "@/components/ui/global-background";
+import { CartSheet } from "@/components/cart-sheet";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
@@ -29,11 +31,14 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <GlobalBackground />
-          <div className="relative z-10">
-            <Navbar />
-            {children}
-          </div>
+          <CartProvider>
+            <GlobalBackground />
+            <CartSheet />
+            <div className="relative z-10">
+              <Navbar />
+              {children}
+            </div>
+          </CartProvider>
         </ThemeProvider>
       </body>
     </html>

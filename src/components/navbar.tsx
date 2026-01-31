@@ -5,15 +5,17 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useEffect, useState } from "react";
 import { IUser } from "@/types";
-import { Loader2, LogOut } from "lucide-react";
+import { Loader2, LogOut, ShoppingCart } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { FloatingNav } from "@/components/ui/floating-nav";
+import { useCart } from "@/context/cart-context";
 
 export function Navbar() {
     const [user, setUser] = useState<IUser | null>(null);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
     const pathname = usePathname();
+    const { openCart, cartCount } = useCart();
 
     // Hide Navbar on dashboard routes
 
@@ -49,6 +51,14 @@ export function Navbar() {
 
     const rightSlot = (
         <div className="flex items-center gap-3">
+            <Button variant="ghost" size="sm" onClick={openCart} className="h-9 w-9 p-0 relative rounded-full hover:bg-muted">
+                <ShoppingCart className="h-5 w-5" />
+                {cartCount > 0 && (
+                    <span className="absolute top-0 right-0 h-4 w-4 bg-primary text-[10px] font-bold text-primary-foreground flex items-center justify-center rounded-full animate-bounce-subtle">
+                        {cartCount}
+                    </span>
+                )}
+            </Button>
             <ThemeToggle />
             {loading ? (
                 <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />

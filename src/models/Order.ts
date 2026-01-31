@@ -13,6 +13,9 @@ export interface IOrder extends Document {
     endDate: Date;
     status: "quote" | "confirmed" | "pickedup" | "returned" | "cancelled";
     totalAmount: number;
+    shippingAddress?: string;
+    contactPhone?: string;
+    notes?: string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -38,6 +41,9 @@ const OrderSchema: Schema<IOrder> = new Schema(
             default: "quote",
         },
         totalAmount: { type: Number, required: true, default: 0 },
+        shippingAddress: { type: String },
+        contactPhone: { type: String },
+        notes: { type: String },
     },
     { timestamps: true }
 );
