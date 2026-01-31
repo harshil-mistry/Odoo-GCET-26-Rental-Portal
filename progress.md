@@ -10,15 +10,15 @@
 
 ## Phase 1: Core System (Must-Have)
 - [ ] **Database Schema Design**
-    - [ ] Create User Model (Name, Email, Password, Role, GSTIN)
-    - [ ] Create Product Model (Name, Category, Price, Period, Stock, isRentable)
-    - [ ] Create Order Model (Dates, Status, Quantities)
+    - [x] Create User Model (Name, Email, Password, Role, GSTIN)
+    - [x] Create Product Model (Name, Category, Price, Period, Stock, isRentable)
+    - [x] Create Order Model (Dates, Status, Quantities)
 - [ ] **Authentication & Authorization**
-    - [ ] Implement JWT Auth API (Signup/Login)
-    - [ ] Create Middleware for Role Protection (Customer, Vendor, Admin)
+    - [x] Implement JWT Auth API (Signup/Login)
+    - [x] Create Middleware for Role Protection (Customer, Vendor, Admin)
 - [ ] **Vendor Dashboard (Inventory Management)**
-    - [ ] Create Product Listing Page
-    - [ ] Implement Add/Edit Product Forms
+    - [/] Create Product Listing Page
+    - [/] Implement Add/Edit Product Forms
     - [ ] Implement Delete Product
 - [ ] **Customer Journey (Booking Flow)**
     - [ ] Create Product Browse Page with Filters
