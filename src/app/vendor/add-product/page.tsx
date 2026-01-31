@@ -54,106 +54,169 @@ export default function AddProductPage() {
     };
 
     return (
-        <div className="max-w-2xl mx-auto space-y-6">
+        <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="flex items-center gap-4">
                 <Link href="/vendor">
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" className="hover:bg-muted/50">
                         <ArrowLeft size={16} className="mr-2" /> Back
                     </Button>
                 </Link>
-                <h1 className="text-2xl font-bold">Add New Product</h1>
+                <div>
+                    <h1 className="text-2xl font-serif font-bold tracking-tight">Add New Product</h1>
+                    <p className="text-sm text-muted-foreground">Detailed information about your rental item.</p>
+                </div>
             </div>
 
-            <div className="border border-border p-6 rounded-xl bg-card shadow-sm">
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium">Product Name</label>
-                        <Input
-                            name="name"
-                            placeholder="e.g. DSLR Camera Canon EOS 200D"
-                            value={formData.name}
-                            onChange={handleChange}
-                            required
-                        />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {/* Form Section */}
+                <div className="md:col-span-2 space-y-6">
+                    <div className="border border-border p-6 rounded-xl bg-card shadow-sm space-y-6">
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium">Product Name</label>
+                                <Input
+                                    name="name"
+                                    placeholder="e.g. Sony A7 III Mirrorless Camera"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    required
+                                    className="h-11 bg-muted/30"
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Category</label>
+                                    <Input
+                                        name="category"
+                                        placeholder="Category"
+                                        value={formData.category}
+                                        onChange={handleChange}
+                                        required
+                                        className="h-11 bg-muted/30"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Rental Period</label>
+                                    <div className="relative">
+                                        <select
+                                            name="rentalPeriod"
+                                            value={formData.rentalPeriod}
+                                            onChange={handleChange}
+                                            className="flex h-11 w-full rounded-md border border-input bg-muted/30 px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring appearance-none"
+                                        >
+                                            <option value="hourly">Hourly Rate</option>
+                                            <option value="daily">Daily Rate</option>
+                                            <option value="weekly">Weekly Rate</option>
+                                        </select>
+                                        <div className="absolute right-3 top-3.5 pointer-events-none opacity-50">
+                                            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Price (₹)</label>
+                                    <div className="relative">
+                                        <span className="absolute left-3 top-3 text-muted-foreground">₹</span>
+                                        <Input
+                                            name="basePrice"
+                                            type="number"
+                                            min="0"
+                                            placeholder="0.00"
+                                            value={formData.basePrice}
+                                            onChange={handleChange}
+                                            required
+                                            className="h-11 pl-7 bg-muted/30"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Total Stock</label>
+                                    <Input
+                                        name="totalStock"
+                                        type="number"
+                                        min="0"
+                                        placeholder="Quantity available"
+                                        value={formData.totalStock}
+                                        onChange={handleChange}
+                                        required
+                                        className="h-11 bg-muted/30"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium">Images</label>
+                                <div className="border-2 border-dashed border-border rounded-xl p-6 transition-colors hover:border-primary/50 bg-muted/10 text-center">
+                                    <Input
+                                        name="images"
+                                        placeholder="https://example.com/img1.jpg, https://example.com/img2.jpg"
+                                        value={formData.images}
+                                        onChange={handleChange}
+                                        className="bg-transparent border-none shadow-none text-center placeholder:text-muted-foreground/50 focus-visible:ring-0"
+                                    />
+                                    <p className="text-xs text-muted-foreground mt-2">
+                                        Paste comma-separated URLs (e.g. Unsplash links).
+                                        <br />
+                                        <span className="opacity-50">File upload coming soon.</span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="pt-4 flex gap-4">
+                                <Link href="/vendor" className="flex-1">
+                                    <Button type="button" variant="outline" className="w-full h-11">
+                                        Cancel
+                                    </Button>
+                                </Link>
+                                <Button type="submit" className="flex-1 h-11 shadow-lg shadow-primary/20" disabled={loading}>
+                                    {loading ? (
+                                        <>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                            Saving...
+                                        </>
+                                    ) : (
+                                        "Publish Product"
+                                    )}
+                                </Button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                {/* Preview / Tips Section */}
+                <div className="space-y-6">
+                    <div className="border border-border p-6 rounded-xl bg-muted/30">
+                        <h3 className="font-semibold mb-2">Pro Tips</h3>
+                        <ul className="text-sm text-muted-foreground space-y-2 list-disc pl-4">
+                            <li>Use high-quality images to attract more renters.</li>
+                            <li>Be specific with your product name (include model numbers).</li>
+                            <li>Set competitive daily rates based on market value.</li>
+                            <li>Ensure your stock count is accurate to avoid cancellations.</li>
+                        </ul>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">Category</label>
-                            <Input
-                                name="category"
-                                placeholder="e.g. Electronics, Furniture"
-                                value={formData.category}
-                                onChange={handleChange}
-                                required
-                            />
+                    {formData.name && (
+                        <div className="border border-border p-4 rounded-xl bg-card shadow-sm opacity-80 pointer-events-none grayscale-[0.2]">
+                            <p className="text-xs font-bold text-muted-foreground uppercase mb-2 tracking-wide">Preview Card</p>
+                            <div className="aspect-[4/3] bg-muted rounded-lg mb-3 overflow-hidden">
+                                {formData.images.split(',')[0] ? (
+                                    <img src={formData.images.split(',')[0]} className="w-full h-full object-cover" />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center text-muted-foreground">No Image</div>
+                                )}
+                            </div>
+                            <h4 className="font-semibold truncate">{formData.name}</h4>
+                            <p className="text-sm text-muted-foreground">{formData.category || "Uncategorized"}</p>
+                            <div className="mt-2 text-sm font-medium">₹{formData.basePrice || 0} / {formData.rentalPeriod}</div>
                         </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">Rental Period</label>
-                            <select
-                                name="rentalPeriod"
-                                value={formData.rentalPeriod}
-                                onChange={handleChange}
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                            >
-                                <option value="hourly">Hourly</option>
-                                <option value="daily">Daily</option>
-                                <option value="weekly">Weekly</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">Price (₹)</label>
-                            <Input
-                                name="basePrice"
-                                type="number"
-                                min="0"
-                                placeholder="0.00"
-                                value={formData.basePrice}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">Total Stock</label>
-                            <Input
-                                name="totalStock"
-                                type="number"
-                                min="0"
-                                placeholder="10"
-                                value={formData.totalStock}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium">Image URLs (comma separated)</label>
-                        <Input
-                            name="images"
-                            placeholder="https://example.com/img1.jpg, https://example.com/img2.jpg"
-                            value={formData.images}
-                            onChange={handleChange}
-                        />
-                        <p className="text-xs text-muted-foreground">For now, paste public image URLs.</p>
-                    </div>
-
-                    <div className="pt-4">
-                        <Button type="submit" className="w-full" disabled={loading}>
-                            {loading ? (
-                                <>
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    Creating Product...
-                                </>
-                            ) : (
-                                "Add Product"
-                            )}
-                        </Button>
-                    </div>
-                </form>
+                    )}
+                </div>
             </div>
         </div>
     );
