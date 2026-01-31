@@ -9,6 +9,7 @@ import { IProduct } from "@/types";
 import { ProductCard } from "@/components/product-card";
 import { Spotlight } from "@/components/ui/spotlight";
 import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards";
+import { Typewriter } from "@/components/ui/typewriter";
 import { useTheme } from "next-themes";
 
 export default function Home() {
@@ -41,7 +42,7 @@ export default function Home() {
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden transition-colors duration-300">
 
       {/* Hero Section with Spotlight */}
-      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden flex items-center justify-center min-h-[90vh]">
+      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 flex items-center justify-center min-h-[90vh]">
         <Spotlight
           className="-top-40 left-0 md:left-60 md:-top-20"
           fill={theme === 'dark' ? "white" : "#ec4899"}
@@ -65,7 +66,11 @@ export default function Home() {
             className="font-serif text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight leading-[1.1] mb-6"
           >
             Rent the <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/50">Impossible.</span>
+            <Typewriter
+              words={["Facilities.", "Equipment.", "Future.", "Dream."]}
+              className="text-transparent bg-clip-text bg-gradient-to-b from-foreground to-foreground/50"
+              cursorClassName="h-10 md:h-16 lg:h-20 bg-foreground/50"
+            />
           </motion.h1>
 
           <motion.p
