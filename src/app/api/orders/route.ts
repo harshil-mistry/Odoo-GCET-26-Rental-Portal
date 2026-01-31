@@ -32,24 +32,44 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ message: "Cart is empty" }, { status: 400 });
         }
 
-        // 2. Default Dates (Mocking 1 day rental starting tomorrow if not provided)
-        // In a real app we would get these from the body request
-        const startDate = new Date();
-        startDate.setDate(startDate.getDate() + 1); // Tomorrow
-        const endDate = new Date(startDate);
-        endDate.setDate(endDate.getDate() + 1); // +1 Day
+        // 2. Calculate Dates from Items
+        let orderStartDate = new Date();
+        let orderEndDate = new Date();
+
+        // Find min start and max end
+        if (items.length > 0 && items[0].startDate && items[0].endDate) {
+            orderStartDate = new Date(items[0].startDate);
+            orderEndDate = new Date(items[0].endDate);
+
+            items.forEach((item: any) => {
+                if (item.startDate) {
+                    const s = new Date(item.startDate);
+                    if (s < orderStartDate) orderStartDate = s;
+                }
+                if (item.endDate) {
+                    const e = new Date(item.endDate);
+                    if (e > orderEndDate) orderEndDate = e;
+                }
+            });
+        } else {
+            // Fallback if no dates provided (should not happen with new cart logic)
+            orderStartDate.setDate(orderStartDate.getDate() + 1);
+            orderEndDate.setDate(orderEndDate.getDate() + 1);
+        }
 
         // 3. Create Order
         const newOrder = new Order({
-            customerId: (user as any).userId, // from token payload
+            customerId: (user as any).userId,
             items: items.map((item: any) => ({
                 productId: item.productId,
                 quantity: item.quantity,
-                priceAtBooking: item.price
+                priceAtBooking: item.price,
+                startDate: item.startDate ? new Date(item.startDate) : orderStartDate,
+                endDate: item.endDate ? new Date(item.endDate) : orderEndDate
             })),
-            startDate,
-            endDate,
-            status: "quote", // Default to quote or confirmed? Let's say "confirmed" for checkout.
+            startDate: orderStartDate,
+            endDate: orderEndDate,
+            status: "quote",
             totalAmount,
             shippingAddress: shippingDetails?.address,
             contactPhone: shippingDetails?.phone,
@@ -58,13 +78,7 @@ export async function POST(req: NextRequest) {
 
         await newOrder.save();
 
-        // 4. Update Stock
-        // This should ideally be a transaction
-        for (const item of items) {
-            await Product.findByIdAndUpdate(item.productId, {
-                $inc: { totalStock: -item.quantity }
-            });
-        }
+        // Stock is managed via availability calculation, not decrementing totalStock.
 
         return NextResponse.json({ message: "Order placed successfully", orderId: newOrder._id }, { status: 201 });
 

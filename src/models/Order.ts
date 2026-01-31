@@ -25,6 +25,8 @@ const OrderItemSchema = new Schema(
         productId: { type: Schema.Types.ObjectId, ref: "Product", required: true },
         quantity: { type: Number, required: true, min: 1 },
         priceAtBooking: { type: Number, required: true, min: 0 },
+        startDate: { type: Date },
+        endDate: { type: Date }
     },
     { _id: false }
 );
@@ -33,7 +35,7 @@ const OrderSchema: Schema<IOrder> = new Schema(
     {
         customerId: { type: Schema.Types.ObjectId, ref: "User", required: true },
         items: [OrderItemSchema],
-        startDate: { type: Date, required: true },
+        startDate: { type: Date, required: true }, // Keep as overall range
         endDate: { type: Date, required: true },
         status: {
             type: String,

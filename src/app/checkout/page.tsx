@@ -42,7 +42,9 @@ export default function CheckoutPage() {
                     items: items.map(item => ({
                         productId: item._id,
                         quantity: item.quantity,
-                        price: item.basePrice
+                        price: item.basePrice,
+                        startDate: item.startDate,
+                        endDate: item.endDate
                     })),
                     totalAmount: cartTotal,
                     shippingDetails: formData

@@ -83,24 +83,11 @@ export function CartSheet() {
                                                 </p>
                                             </div>
                                             <div className="flex items-center justify-between mt-2">
-                                                <div className="flex items-center border border-input rounded-md h-8">
-                                                    <button
-                                                        onClick={() => updateQuantity(item._id, item.quantity - 1)}
-                                                        className="px-2 hover:bg-muted h-full flex items-center justify-center disabled:opacity-50"
-                                                        disabled={item.quantity <= 1}
-                                                    >
-                                                        <Minus size={12} />
-                                                    </button>
-                                                    <span className="w-8 text-center text-sm font-medium">{item.quantity}</span>
-                                                    <button
-                                                        onClick={() => updateQuantity(item._id, item.quantity + 1)}
-                                                        className="px-2 hover:bg-muted h-full flex items-center justify-center"
-                                                    >
-                                                        <Plus size={12} />
-                                                    </button>
+                                                <div className="text-sm font-medium text-muted-foreground">
+                                                    Qty: {item.quantity}
                                                 </div>
                                                 <button
-                                                    onClick={() => removeFromCart(item._id)}
+                                                    onClick={() => removeFromCart(item._id, item.startDate, item.endDate)}
                                                     className="text-muted-foreground hover:text-destructive transition-colors p-1"
                                                 >
                                                     <Trash2 size={16} />
@@ -138,7 +125,8 @@ export function CartSheet() {
                         )}
                     </motion.div>
                 </>
-            )}
-        </AnimatePresence>
+            )
+            }
+        </AnimatePresence >
     );
 }

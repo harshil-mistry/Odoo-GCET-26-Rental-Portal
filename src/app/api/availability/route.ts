@@ -20,17 +20,29 @@ export async function POST(req: Request) {
         // Overlap condition: (OrderStart <= RequestedEnd) AND (OrderEnd >= RequestedStart)
         const activeStatues = ["confirmed", "pickedup"]; // returned/cancelled don't count
 
+        // Fetch all active orders containing this product
+        // We do filtering in JS to handle both legacy (order-level dates) and new (item-level dates) logic
         const overlappingOrders = await Order.find({
             "items.productId": productId,
-            status: { $in: activeStatues },
-            startDate: { $lte: end },
-            endDate: { $gte: start }
+            status: { $in: activeStatues }
         });
 
         let reservedCount = 0;
         overlappingOrders.forEach((order: any) => {
+            // Find the specific item in the order
             const item = order.items.find((i: any) => i.productId.toString() === productId);
-            if (item) reservedCount += item.quantity;
+
+            if (item) {
+                // Use item-specific dates if available, otherwise fall back to order-level dates
+                const itemStart = item.startDate ? new Date(item.startDate) : new Date(order.startDate);
+                const itemEnd = item.endDate ? new Date(item.endDate) : new Date(order.endDate);
+
+                // Check for date overlap
+                // (StartA <= EndB) and (EndA >= StartB)
+                if (itemStart <= end && itemEnd >= start) {
+                    reservedCount += item.quantity;
+                }
+            }
         });
 
         const availableStock = product.totalStock - reservedCount;

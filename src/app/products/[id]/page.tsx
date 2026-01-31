@@ -61,7 +61,8 @@ export default function ProductDetailsPage() {
 
     const handleAddToCart = () => {
         if (!product) return;
-        addToCart(product, quantity);
+        if (!startDate || !endDate) return alert("Please select travel dates");
+        addToCart(product, quantity, startDate, endDate);
     };
 
     if (loading) return (

@@ -5,14 +5,16 @@ import { IProduct } from "@/types";
 
 export interface CartItem extends IProduct {
     quantity: number;
-    rentalDays: number; // Default to 1 for now
+    rentalDays: number;
+    startDate?: string;
+    endDate?: string;
 }
 
 interface CartContextType {
     items: CartItem[];
-    addToCart: (product: IProduct, quantity?: number) => void;
-    removeFromCart: (productId: string) => void;
-    updateQuantity: (productId: string, quantity: number) => void;
+    addToCart: (product: IProduct, quantity?: number, startDate?: string, endDate?: string) => void;
+    removeFromCart: (productId: string, startDate?: string, endDate?: string) => void;
+    updateQuantity: (productId: string, quantity: number, startDate?: string, endDate?: string) => void;
     clearCart: () => void;
     cartTotal: number;
     cartCount: number;
@@ -46,30 +48,37 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         }
     }, [items, isMounted]);
 
-    const addToCart = (product: IProduct, quantity: number = 1) => {
+    const addToCart = (product: IProduct, quantity: number = 1, startDate?: string, endDate?: string) => {
         setItems((prev) => {
-            const existing = prev.find((item) => item._id === product._id);
+            const existing = prev.find((item) =>
+                item._id === product._id &&
+                item.startDate === startDate &&
+                item.endDate === endDate
+            );
+
             if (existing) {
                 return prev.map((item) =>
-                    item._id === product._id
+                    (item._id === product._id && item.startDate === startDate && item.endDate === endDate)
                         ? { ...item, quantity: item.quantity + quantity }
                         : item
                 );
             }
-            return [...prev, { ...product, quantity: quantity, rentalDays: 1 }];
+            return [...prev, { ...product, quantity, rentalDays: 1, startDate, endDate }];
         });
         setIsCartOpen(true);
     };
 
-    const removeFromCart = (productId: string) => {
-        setItems((prev) => prev.filter((item) => item._id !== productId));
+    const removeFromCart = (productId: string, startDate?: string, endDate?: string) => {
+        setItems((prev) => prev.filter((item) => !(item._id === productId && item.startDate === startDate && item.endDate === endDate)));
     };
 
-    const updateQuantity = (productId: string, quantity: number) => {
+    const updateQuantity = (productId: string, quantity: number, startDate?: string, endDate?: string) => {
         if (quantity < 1) return;
         setItems((prev) =>
             prev.map((item) =>
-                item._id === productId ? { ...item, quantity } : item
+                (item._id === productId && item.startDate === startDate && item.endDate === endDate)
+                    ? { ...item, quantity }
+                    : item
             )
         );
     };
