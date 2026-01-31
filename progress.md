@@ -1,12 +1,12 @@
 # SmartRent Project Progress
 
 ## Phase 0: Project Setup & Architecture
-- [ ] Initialize Next.js Project (App Router, TypeScript, Tailwind CSS)
-- [ ] Configure Tailwind Theme (Colors: White, Black, Shades of Pink)
-- [ ] Set up Folder Structure (src/components, src/lib, src/models, src/app)
-- [ ] Configure Database Connection (MongoDB/Mongoose)
-- [ ] **Implement Admin Seeding Script** (Check DB on start, use Env vars)
-- [ ] Implement Theme Provider (Dark/Light Mode with Toggle)
+- [x] Initialize Next.js Project (App Router, TypeScript, Tailwind CSS)
+- [x] Configure Tailwind Theme (Colors: White, Black, Shades of Pink)
+- [x] Set up Folder Structure (src/components, src/lib, src/models, src/app)
+- [x] Configure Database Connection (MongoDB/Mongoose)
+- [x] **Implement Admin Seeding Script** (Check DB on start, use Env vars)
+- [x] Implement Theme Provider (Dark/Light Mode with Toggle)
 
 ## Phase 1: Core System (Must-Have)
 - [ ] **Database Schema Design**

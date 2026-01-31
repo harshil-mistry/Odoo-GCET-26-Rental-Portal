@@ -1,0 +1,33 @@
+import mongoose, { Schema, Document, Model } from "mongoose";
+
+export interface IUser extends Document {
+    name: string;
+    email: string;
+    password?: string;
+    role: "customer" | "vendor" | "admin";
+    gstin?: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+const UserSchema: Schema<IUser> = new Schema(
+    {
+        name: { type: String, required: true },
+        email: { type: String, required: true, unique: true },
+        password: { type: String, select: true }, // Select false by default? Maybe true for now to check match
+        role: {
+            type: String,
+            enum: ["customer", "vendor", "admin"],
+            default: "customer",
+        },
+        gstin: { type: String },
+    },
+    { timestamps: true }
+);
+
+// Prevent overwriting model if already compiled
+const User: Model<IUser> =
+    (mongoose.models.User as Model<IUser>) ||
+    mongoose.model<IUser>("User", UserSchema);
+
+export default User;
