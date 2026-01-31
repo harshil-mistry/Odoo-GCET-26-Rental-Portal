@@ -35,8 +35,24 @@ export default function SignupPage() {
             });
     }, [router]);
 
+    const validatePassword = (password: string) => {
+        if (password.length < 8) return "Password must be at least 8 characters long";
+        if (!/[A-Z]/.test(password)) return "Password must contain at least one capital letter";
+        if (!/[a-z]/.test(password)) return "Password must contain at least one small letter";
+        if (!/[0-9]/.test(password)) return "Password must contain at least one number";
+        if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) return "Password must contain at least one special character";
+        return null;
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        const passwordError = validatePassword(formData.password);
+        if (passwordError) {
+            alert(passwordError);
+            return;
+        }
+
         setLoading(true);
         try {
             const res = await fetch("/api/auth/signup", {

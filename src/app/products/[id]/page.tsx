@@ -195,8 +195,18 @@ export default function ProductDetailsPage() {
                                     <label className="text-sm font-medium">Start Date</label>
                                     <Input
                                         type="date"
+                                        min={(() => {
+                                            const tomorrow = new Date();
+                                            tomorrow.setDate(tomorrow.getDate() + 1);
+                                            return tomorrow.toISOString().split('T')[0];
+                                        })()}
                                         value={startDate}
-                                        onChange={e => setStartDate(e.target.value)}
+                                        onChange={e => {
+                                            setStartDate(e.target.value);
+                                            if (endDate && e.target.value > endDate) {
+                                                setEndDate(e.target.value);
+                                            }
+                                        }}
                                         className="h-12 rounded-xl bg-muted/30 border-border/50"
                                     />
                                 </div>
@@ -204,6 +214,11 @@ export default function ProductDetailsPage() {
                                     <label className="text-sm font-medium">End Date</label>
                                     <Input
                                         type="date"
+                                        min={startDate || (() => {
+                                            const tomorrow = new Date();
+                                            tomorrow.setDate(tomorrow.getDate() + 1);
+                                            return tomorrow.toISOString().split('T')[0];
+                                        })()}
                                         value={endDate}
                                         onChange={e => setEndDate(e.target.value)}
                                         className="h-12 rounded-xl bg-muted/30 border-border/50"
