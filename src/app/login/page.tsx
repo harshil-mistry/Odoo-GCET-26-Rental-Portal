@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,19 @@ export default function LoginPage() {
         email: "",
         password: "",
     });
+
+    useEffect(() => {
+        // Redirect if already logged in
+        fetch("/api/auth/me")
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.user) {
+                    if (data.user.role === 'vendor') router.push("/vendor");
+                    else if (data.user.role === 'admin') router.push("/admin");
+                    else router.push("/");
+                }
+            });
+    }, [router]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });

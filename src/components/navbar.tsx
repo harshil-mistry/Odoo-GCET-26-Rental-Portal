@@ -6,16 +6,22 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useEffect, useState } from "react";
 import { IUser } from "@/types";
 import { Loader2, LogOut, User as UserIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 export function Navbar() {
     const [user, setUser] = useState<IUser | null>(null);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
+    const pathname = usePathname();
+
+    // Hide Navbar on dashboard routes
+    if (pathname.startsWith("/vendor") || pathname.startsWith("/admin")) {
+        return null;
+    }
 
     useEffect(() => {
         checkUser();
-    }, []);
+    }, [pathname]);
 
     const checkUser = async () => {
         try {
