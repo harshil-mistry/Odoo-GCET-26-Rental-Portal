@@ -3,19 +3,13 @@ import connectDB from "@/lib/db";
 import Order from "@/models/Order";
 import Product from "@/models/Product";
 import User from "@/models/User";
-import jwt from "jsonwebtoken";
-
-const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
+import { verifyToken } from "@/lib/jwt";
 
 // Helper to get user from token
 const getUser = (req: NextRequest) => {
     const token = req.cookies.get("token")?.value;
     if (!token) return null;
-    try {
-        return jwt.verify(token, JWT_SECRET) as any;
-    } catch (e) {
-        return null;
-    }
+    return verifyToken(token);
 };
 
 export async function POST(req: NextRequest) {
@@ -47,7 +41,7 @@ export async function POST(req: NextRequest) {
 
         // 3. Create Order
         const newOrder = new Order({
-            customerId: user.id, // from token payload
+            customerId: (user as any).userId, // from token payload
             items: items.map((item: any) => ({
                 productId: item.productId,
                 quantity: item.quantity,
