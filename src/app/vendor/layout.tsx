@@ -1,23 +1,55 @@
-import { VendorSidebar } from "@/components/vendor/sidebar";
+"use client";
+
+import { useState, useEffect } from "react";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { FloatingNav } from "@/components/ui/floating-nav";
+import { LayoutDashboard, PlusCircle, Package, LogOut, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { IUser } from "@/types";
 
 export default function VendorLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
+    const router = useRouter();
+    const [user, setUser] = useState<IUser | null>(null);
+
+    useEffect(() => {
+        // Simple auth check or relying on middleware?
+        // Middleware handles protection, but we need user info for "Hi, User"
+        fetch("/api/auth/me").then(r => r.json()).then(d => setUser(d.user));
+    }, []);
+
+    const handleLogout = async () => {
+        await fetch("/api/auth/logout", { method: "POST" });
+        router.push("/");
+        router.refresh();
+    };
+
+    const vendorLinks = [
+        { href: "/vendor", label: "Dashboard", icon: <LayoutDashboard size={16} /> },
+        { href: "/vendor/add-product", label: "Add Product", icon: <PlusCircle size={16} /> },
+    ];
+
+    const rightSlot = (
+        <div className="flex items-center gap-3">
+            <ThemeToggle />
+            {user && <span className="text-sm font-medium">Hi, {user.name}</span>}
+            <Button size="sm" variant="ghost" onClick={handleLogout} className="text-destructive hover:text-destructive hover:bg-destructive/10">
+                <LogOut size={16} />
+            </Button>
+        </div>
+    );
+
     return (
-        <div className="flex min-h-screen bg-background text-foreground">
-            <aside className="hidden md:block h-screen sticky top-0">
-                <VendorSidebar />
-            </aside>
-            <div className="flex-1 flex flex-col">
-                <header className="h-14 border-b border-border flex items-center justify-between px-6 bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-                    <span className="font-semibold text-sm text-muted-foreground">Odoo GCET Hackathon</span>
-                    <ThemeToggle />
-                </header>
-                <main className="flex-1 p-6 overflow-auto">{children}</main>
-            </div>
+        <div className="min-h-screen bg-background text-foreground pt-24">
+            <FloatingNav items={vendorLinks} rightSlot={rightSlot} logoHref="/vendor" />
+
+            <main className="container mx-auto px-4 pb-10">
+                {children}
+            </main>
         </div>
     );
 }

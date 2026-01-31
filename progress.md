@@ -23,9 +23,9 @@
     - [x] Implement Add/Edit Product Forms
     - [x] Implement Delete Product
 - [ ] **Customer Journey (Booking Flow)**
-    - [ ] Create Product Browse Page with Filters
-    - [ ] Implement Product Details Page
-    - [ ] **Implement Overlapping Date Check Algorithm** (Critical)
+    - [x] Create Product Browse Page with Filters
+    - [x] Implement Product Details Page
+    - [x] **Implement Overlapping Date Check Algorithm** (Critical)
     - [ ] Create Cart / Draft Quote System
     - [ ] Implement Checkout (Quote -> Order Conversion)
 - [ ] **Operations & Invoicing**
@@ -34,7 +34,7 @@
 
 ## Phase 2: UI Polish & Logistics
 - [ ] **UI Enhancements**
-    - [ ] Implement Hovering/Floating Navbar Component
+    - [x] Implement Hovering/Floating Navbar Component
     - [ ] Create Reusable UI Components (Buttons, Cards, Inputs) with "Pink/Black" aesthetic
     - [ ] Add Micro-animations (Framer Motion)
 - [ ] **Dashboards & Reporting**
