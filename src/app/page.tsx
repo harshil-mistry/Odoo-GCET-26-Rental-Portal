@@ -79,7 +79,7 @@ export default function Home() {
             transition={{ delay: 0.4, duration: 0.8 }}
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed"
           >
-            Experience the future of gear management. Real-time availability, AI-powered insights, and seamless bookings.
+            Experience the future of gear management. Real-time availability, detailed information, and seamless bookings.
           </motion.p>
 
           <motion.div
