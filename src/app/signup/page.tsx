@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2 } from "lucide-react";
+import { Loader2, Sparkles, ArrowRight, Store, User } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function SignupPage() {
     const router = useRouter();
@@ -23,7 +24,6 @@ export default function SignupPage() {
     };
 
     useEffect(() => {
-        // Redirect if already logged in
         fetch("/api/auth/me")
             .then((res) => res.json())
             .then((data) => {
@@ -65,8 +65,152 @@ export default function SignupPage() {
 
     return (
         <div className="min-h-screen w-full lg:grid lg:grid-cols-2">
-            {/* Left Side - Visual - Reversed for visual interest */}
-            <div className="hidden lg:flex relative h-full w-full flex-col p-10 dark:border-r order-2 text-white">
+            {/* Left Side - Form */}
+            <div className="flex items-center justify-center p-8 bg-background order-1">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="mx-auto flex w-full flex-col justify-center space-y-8 sm:w-[420px]"
+                >
+                    <div className="flex flex-col space-y-3 text-center">
+                        <h1 className="text-4xl font-serif font-bold tracking-tight">Create an account</h1>
+                        <p className="text-muted-foreground">
+                            Join thousands of creators and businesses on SmartRent
+                        </p>
+                    </div>
+
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Full Name</label>
+                            <Input
+                                name="name"
+                                placeholder="John Doe"
+                                value={formData.name}
+                                onChange={handleChange}
+                                required
+                                className="h-12 rounded-xl bg-muted/30 border-border/50 text-base"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Email</label>
+                            <Input
+                                name="email"
+                                type="email"
+                                placeholder="name@example.com"
+                                value={formData.email}
+                                onChange={handleChange}
+                                required
+                                className="h-12 rounded-xl bg-muted/30 border-border/50 text-base"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Password</label>
+                            <Input
+                                name="password"
+                                type="password"
+                                placeholder="••••••••"
+                                value={formData.password}
+                                onChange={handleChange}
+                                required
+                                className="h-12 rounded-xl bg-muted/30 border-border/50 text-base"
+                            />
+                        </div>
+
+                        {/* Role Selector - Premium Toggle */}
+                        <div className="space-y-3">
+                            <label className="text-sm font-medium">I want to...</label>
+                            <div className="grid grid-cols-2 gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => setFormData({ ...formData, role: "customer" })}
+                                    className={`p-4 rounded-2xl border-2 transition-all text-left group ${formData.role === "customer"
+                                        ? "border-primary bg-primary/5"
+                                        : "border-border/50 hover:border-border"
+                                        }`}
+                                >
+                                    <div className={`w-10 h-10 rounded-xl mb-3 flex items-center justify-center transition-colors ${formData.role === "customer"
+                                        ? "bg-primary text-primary-foreground"
+                                        : "bg-muted text-muted-foreground"
+                                        }`}>
+                                        <User size={20} />
+                                    </div>
+                                    <p className="font-semibold">Rent Gear</p>
+                                    <p className="text-xs text-muted-foreground">Browse and book equipment</p>
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setFormData({ ...formData, role: "vendor" })}
+                                    className={`p-4 rounded-2xl border-2 transition-all text-left group ${formData.role === "vendor"
+                                        ? "border-primary bg-primary/5"
+                                        : "border-border/50 hover:border-border"
+                                        }`}
+                                >
+                                    <div className={`w-10 h-10 rounded-xl mb-3 flex items-center justify-center transition-colors ${formData.role === "vendor"
+                                        ? "bg-primary text-primary-foreground"
+                                        : "bg-muted text-muted-foreground"
+                                        }`}>
+                                        <Store size={20} />
+                                    </div>
+                                    <p className="font-semibold">List Gear</p>
+                                    <p className="text-xs text-muted-foreground">Rent out my equipment</p>
+                                </button>
+                            </div>
+                        </div>
+
+                        <AnimatePresence>
+                            {formData.role === "vendor" && (
+                                <motion.div
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: "auto" }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                    className="space-y-2 overflow-hidden"
+                                >
+                                    <label className="text-sm font-medium">GSTIN Number</label>
+                                    <Input
+                                        name="gstin"
+                                        placeholder="GSTIN12345..."
+                                        value={formData.gstin}
+                                        onChange={handleChange}
+                                        required
+                                        className="h-12 rounded-xl bg-muted/30 border-border/50 text-base"
+                                    />
+                                    <p className="text-xs text-muted-foreground">Required for vendor registration</p>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        <Button
+                            type="submit"
+                            className="w-full h-12 text-base rounded-xl shadow-lg shadow-primary/25 group"
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Creating account...
+                                </>
+                            ) : (
+                                <>
+                                    Create Account
+                                    <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                                </>
+                            )}
+                        </Button>
+                    </form>
+
+                    <p className="text-center text-sm text-muted-foreground">
+                        Already have an account?{" "}
+                        <Link href="/login" className="text-primary font-medium hover:underline">
+                            Sign in
+                        </Link>
+                    </p>
+                </motion.div>
+            </div>
+
+            {/* Right Side - Visual */}
+            <div className="hidden lg:flex relative h-full w-full flex-col p-12 text-white order-2 overflow-hidden">
+                {/* Background Image */}
                 <div
                     className="absolute inset-0 bg-zinc-900"
                     style={{
@@ -75,119 +219,43 @@ export default function SignupPage() {
                         backgroundPosition: "center"
                     }}
                 />
-                <div className="absolute inset-0 bg-purple-900/60 mix-blend-multiply" /> {/* Purple tint for consistency */}
-                <div className="absolute inset-0 bg-black/40" />
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/40 via-purple-900/60 to-black/80" />
 
-                <div className="relative z-20 flex items-center gap-2 font-serif text-2xl font-bold">
-                    <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white shadow-lg">S</div>
-                    SmartRent
-                </div>
+                {/* Grid Pattern */}
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:32px_32px]" />
 
-                <div className="relative z-20 mt-auto text-right self-end max-w-lg">
-                    <blockquote className="space-y-2">
-                        <p className="text-2xl font-serif font-medium leading-relaxed tracking-wide">
-                            &ldquo;We rent out our specialized drones here. The vendor tools are miles ahead of the competition.&rdquo;
-                        </p>
-                        <footer className="text-base font-medium opacity-80 pt-2 flex items-center gap-2 justify-end">
-                            Marcus Chen - Aerial Cinematography
-                            <div className="w-8 h-8 rounded-full bg-white/20" />
-                        </footer>
-                    </blockquote>
-                </div>
-            </div>
-
-            {/* Right Side - Form - Now on Left */}
-            <div className="flex items-center justify-center p-8 order-1">
-                <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-                    <div className="flex flex-col space-y-2 text-center">
-                        <h1 className="text-3xl font-serif font-bold tracking-tight">Create an account</h1>
-                        <p className="text-sm text-muted-foreground">
-                            Enter your details beneath to get started
-                        </p>
+                {/* Stats */}
+                <div className="relative z-20 mt-auto space-y-8">
+                    <div className="grid grid-cols-3 gap-6">
+                        {[
+                            { value: "10K+", label: "Active Users" },
+                            { value: "500+", label: "Premium Gear" },
+                            { value: "₹2Cr+", label: "In Rentals" }
+                        ].map((stat, i) => (
+                            <div key={i} className="text-center bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4">
+                                <p className="text-2xl font-bold">{stat.value}</p>
+                                <p className="text-sm text-white/60">{stat.label}</p>
+                            </div>
+                        ))}
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium leading-none">Full Name</label>
-                            <Input
-                                name="name"
-                                placeholder="John Doe"
-                                value={formData.name}
-                                onChange={handleChange}
-                                required
-                                className="h-11 bg-muted/50"
-                            />
+                    <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-8 space-y-4">
+                        <div className="flex gap-1">
+                            {[...Array(5)].map((_, i) => (
+                                <Sparkles key={i} size={16} className="text-yellow-400 fill-yellow-400" />
+                            ))}
                         </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium leading-none">Email</label>
-                            <Input
-                                name="email"
-                                type="email"
-                                placeholder="name@example.com"
-                                value={formData.email}
-                                onChange={handleChange}
-                                required
-                                className="h-11 bg-muted/50"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium leading-none">Password</label>
-                            <Input
-                                name="password"
-                                type="password"
-                                placeholder="••••••••"
-                                value={formData.password}
-                                onChange={handleChange}
-                                required
-                                className="h-11 bg-muted/50"
-                            />
-                        </div>
-
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium leading-none">I am a...</label>
-                            <select
-                                name="role"
-                                value={formData.role}
-                                onChange={handleChange}
-                                className="flex h-11 w-full rounded-md border border-input bg-muted/50 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                            >
-                                <option value="customer">Customer (I want to rent)</option>
-                                <option value="vendor">Vendor (I want to list)</option>
-                            </select>
-                        </div>
-
-                        {formData.role === "vendor" && (
-                            <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
-                                <label className="text-sm font-medium leading-none">GSTIN Number</label>
-                                <Input
-                                    name="gstin"
-                                    placeholder="GSTIN12345"
-                                    value={formData.gstin}
-                                    onChange={handleChange}
-                                    required
-                                    className="h-11 bg-muted/50"
-                                />
+                        <blockquote className="text-xl font-serif italic leading-relaxed">
+                            "We rent out our specialized drones here. The vendor tools are miles ahead of the competition."
+                        </blockquote>
+                        <footer className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-purple-500" />
+                            <div>
+                                <p className="font-medium">Marcus Chen</p>
+                                <p className="text-sm text-white/60">Aerial Cinematography</p>
                             </div>
-                        )}
-
-                        <Button type="submit" className="w-full h-11 text-base shadow-lg shadow-primary/20" disabled={loading}>
-                            {loading ? (
-                                <>
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    Creating account...
-                                </>
-                            ) : (
-                                "Create Account"
-                            )}
-                        </Button>
-                    </form>
-
-                    <p className="px-8 text-center text-sm text-muted-foreground">
-                        Already have an account?{" "}
-                        <Link href="/login" className="underline underline-offset-4 hover:text-primary">
-                            Sign in
-                        </Link>
-                    </p>
+                        </footer>
+                    </div>
                 </div>
             </div>
         </div>
