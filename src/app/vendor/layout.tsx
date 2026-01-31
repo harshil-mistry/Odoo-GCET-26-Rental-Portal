@@ -30,6 +30,7 @@ export default function VendorLayout({
 
     const vendorLinks = [
         { href: "/vendor", label: "Dashboard", icon: <LayoutDashboard size={16} /> },
+        { href: "/vendor/orders", label: "Orders", icon: <Package size={16} /> },
         { href: "/vendor/add-product", label: "Add Product", icon: <PlusCircle size={16} /> },
     ];
 

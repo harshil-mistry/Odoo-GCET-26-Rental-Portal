@@ -41,6 +41,7 @@ export async function POST(req: Request) {
 
         const newProduct = new Product({
             ...body,
+            vendorId: decoded.userId,
             isRentable: true, // Default
         });
 

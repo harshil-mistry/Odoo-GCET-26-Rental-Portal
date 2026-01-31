@@ -8,6 +8,7 @@ export interface IProduct extends Document {
     totalStock: number;
     isRentable: boolean;
     images: string[];
+    vendorId: mongoose.Types.ObjectId;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -26,6 +27,7 @@ const ProductSchema: Schema<IProduct> = new Schema(
         totalStock: { type: Number, required: true, min: 0, default: 0 },
         isRentable: { type: Boolean, default: true },
         images: { type: [String], default: [] },
+        vendorId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     },
     { timestamps: true }
 );
