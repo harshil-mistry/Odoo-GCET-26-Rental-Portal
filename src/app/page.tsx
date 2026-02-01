@@ -45,7 +45,7 @@ export default function Home() {
       <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 flex items-center justify-center min-h-[90vh]">
         <Spotlight
           className="-top-40 left-0 md:left-60 md:-top-20"
-          fill={theme === 'dark' ? "white" : "#ec4899"}
+          fill={"#ec4899"}
         />
 
         <div className="container mx-auto px-6 relative z-10 text-center">
