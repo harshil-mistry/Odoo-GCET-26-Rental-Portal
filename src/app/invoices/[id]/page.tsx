@@ -8,6 +8,8 @@ import Link from "next/link";
 import { format } from "date-fns";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import Script from "next/script";
+import { CheckCircle, CreditCard } from "lucide-react";
 
 export default function InvoicePage() {
     const params = useParams();
@@ -16,29 +18,123 @@ export default function InvoicePage() {
     const [invoice, setInvoice] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [downloading, setDownloading] = useState(false);
+    const [user, setUser] = useState<any>(null);
+    const [paymentProcessing, setPaymentProcessing] = useState(false);
 
     useEffect(() => {
-        if (!id) return;
-
-        const fetchInvoice = async () => {
+        const fetchUser = async () => {
             try {
-                const res = await fetch(`/api/invoices/${id}`);
+                const res = await fetch("/api/auth/me");
                 if (res.ok) {
                     const data = await res.json();
-                    setInvoice(data.invoice);
-                } else {
-                    alert("Failed to load invoice");
-                    router.back();
+                    setUser(data.user);
                 }
             } catch (e) {
                 console.error(e);
-            } finally {
-                setLoading(false);
             }
         };
+        fetchUser();
+    }, []);
 
+    const fetchInvoice = async () => {
+        try {
+            const res = await fetch(`/api/invoices/${id}`);
+            if (res.ok) {
+                const data = await res.json();
+                setInvoice(data.invoice);
+            } else {
+                alert("Failed to load invoice");
+                router.back();
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (!id) return;
         fetchInvoice();
     }, [id, router]);
+
+    const handleMarkAsPaid = async () => {
+        if (!confirm("Are you sure you want to mark this invoice as paid manually?")) return;
+
+        try {
+            const res = await fetch(`/api/invoices/${id}/status`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ status: "paid" })
+            });
+
+            if (res.ok) {
+                fetchInvoice();
+            } else {
+                alert("Failed to update status");
+            }
+        } catch (e) {
+            console.error(e);
+            alert("Error updating status");
+        }
+    };
+
+    const handlePayNow = async () => {
+        setPaymentProcessing(true);
+        try {
+            const options = {
+                key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+                amount: Math.round(invoice.amount * 100), // Amount in paisa
+                currency: "INR",
+                name: "Rental Service",
+                description: `Invoice Payment #${invoice.invoiceNumber}`,
+                // No order_id needed for client-side only flow
+                handler: async function (response: any) {
+                    try {
+                        const verifyRes = await fetch(`/api/invoices/${id}/verify`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                // No order_id or signature in this flow
+                            })
+                        });
+
+                        if (verifyRes.ok) {
+                            alert("Payment Successful!");
+                            fetchInvoice();
+                        } else {
+                            alert("Payment Verification Failed");
+                        }
+                    } catch (e) {
+                        console.error(e);
+                        alert("Error verifying payment");
+                    }
+                },
+                prefill: {
+                    name: user?.name,
+                    email: user?.email,
+                },
+                config: {
+                    display: {
+                        language: "en"
+                    }
+                },
+                theme: {
+                    color: "#ec4899"
+                }
+            };
+
+            const rzp = new (window as any).Razorpay(options);
+            rzp.open();
+
+        } catch (error) {
+            console.error(error);
+            alert("Payment failed initialization");
+        } finally {
+            setPaymentProcessing(false);
+        }
+    };
 
     const handleDownloadPDF = async () => {
         const element = document.getElementById("invoice-content");
@@ -83,6 +179,7 @@ export default function InvoicePage() {
 
     return (
         <div className="min-h-screen bg-muted/20 pt-28 pb-12 px-4 print:bg-white print:p-0">
+            <Script src="https://checkout.razorpay.com/v1/checkout.js" />
             <div className="max-w-3xl mx-auto space-y-6">
                 {/* Actions */}
                 <div className="flex items-center justify-between print:hidden">
@@ -189,6 +286,30 @@ export default function InvoicePage() {
                         </span>
                     </div>
                 </div>
+
+                {/* Payment Actions */}
+                {invoice.status === "pending" && user && (
+                    <div className="flex justify-center gap-4 print:hidden">
+                        {user.role === "vendor" && user._id === invoice.vendorId._id && (
+                            <Button
+                                onClick={handleMarkAsPaid}
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-8 py-6 h-auto text-lg gap-2"
+                            >
+                                <CheckCircle size={20} /> Mark as Paid
+                            </Button>
+                        )}
+                        {user._id === invoice.customerId._id && (
+                            <Button
+                                onClick={handlePayNow}
+                                disabled={paymentProcessing}
+                                className="bg-[#ec4899] hover:bg-pink-600 text-white rounded-full px-8 py-6 h-auto text-lg gap-2 shadow-xl shadow-pink-500/20"
+                            >
+                                {paymentProcessing ? <Loader2 className="animate-spin" /> : <CreditCard size={20} />}
+                                Pay Now
+                            </Button>
+                        )}
+                    </div>
+                )}
 
                 <div className="flex justify-center print:hidden">
                     <Button

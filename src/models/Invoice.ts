@@ -9,6 +9,8 @@ export interface IInvoice extends Document {
     status: "paid" | "pending";
     issuedAt: Date;
     dueDate: Date;
+    paymentId?: string;
+    paymentMethod?: string;
     items: {
         description: string;
         quantity: number;
@@ -27,6 +29,8 @@ const InvoiceSchema: Schema<IInvoice> = new Schema(
         status: { type: String, enum: ["paid", "pending"], default: "pending" },
         issuedAt: { type: Date, default: Date.now },
         dueDate: { type: Date, required: true },
+        paymentId: { type: String },
+        paymentMethod: { type: String, default: "manual" },
         items: [{
             description: String,
             quantity: Number,
