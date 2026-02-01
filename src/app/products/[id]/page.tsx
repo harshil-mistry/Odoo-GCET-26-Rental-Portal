@@ -45,15 +45,21 @@ export default function ProductDetailsPage() {
         if (!startDate || !endDate) return alert("Select dates");
         setChecking(true);
         try {
-            await fetch("/api/availability", {
+            const res = await fetch("/api/availability", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ productId: id, startDate, endDate, quantity })
             });
-            setAvailable(true);
+
+            if (res.ok) {
+                const data = await res.json();
+                setAvailable(data.available);
+            } else {
+                setAvailable(false);
+            }
         } catch (e) {
             console.error(e);
-            setAvailable(true);
+            setAvailable(false);
         } finally {
             setChecking(false);
         }

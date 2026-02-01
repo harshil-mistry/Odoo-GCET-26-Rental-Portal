@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useEffect, useState, useRef } from "react";
 import { IUser } from "@/types";
-import { Loader2, ShoppingCart, LayoutDashboard, ShoppingBag, LogOut, ChevronDown, Store, Shield } from "lucide-react";
+import { Loader2, ShoppingCart, LayoutDashboard, ShoppingBag, LogOut, ChevronDown, Store, Shield, FileText } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { FloatingNav } from "@/components/ui/floating-nav";
 import { useCart } from "@/context/cart-context";
@@ -58,6 +58,7 @@ export function Navbar() {
     const navLinks = user ? [
         { label: "Dashboard", href: "/dashboard" },
         { label: "My Orders", href: "/dashboard/orders" },
+        { label: "Invoices", href: "/dashboard?tab=invoices" },
         { label: "Browse", href: "/browse" },
     ] : [
         { label: "Browse", href: "/browse" },
@@ -118,13 +119,24 @@ export function Navbar() {
                                             <ShoppingBag size={16} /> My Orders
                                         </div>
                                     </Link>
-                                    {/* Role Based Links */}
+                                    <Link href="/dashboard?tab=invoices" onClick={() => setIsMenuOpen(false)}>
+                                        <div className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors">
+                                            <FileText size={16} /> My Invoices
+                                        </div>
+                                    </Link>
                                     {user.role === 'vendor' && (
-                                        <Link href="/vendor" onClick={() => setIsMenuOpen(false)}>
-                                            <div className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors text-blue-600 dark:text-blue-400">
-                                                <Store size={16} /> Vendor Dashboard
-                                            </div>
-                                        </Link>
+                                        <>
+                                            <Link href="/vendor" onClick={() => setIsMenuOpen(false)}>
+                                                <div className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors text-blue-600 dark:text-blue-400">
+                                                    <Store size={16} /> Vendor Dashboard
+                                                </div>
+                                            </Link>
+                                            <Link href="/vendor?tab=invoices" onClick={() => setIsMenuOpen(false)}>
+                                                <div className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors text-blue-600 dark:text-blue-400">
+                                                    <FileText size={16} /> Vendor Invoices
+                                                </div>
+                                            </Link>
+                                        </>
                                     )}
                                     {user.role === 'admin' && (
                                         <Link href="/admin" onClick={() => setIsMenuOpen(false)}>
