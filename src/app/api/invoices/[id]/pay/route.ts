@@ -29,20 +29,6 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
             receipt: invoice.invoiceNumber,
         };
 
-        console.log(process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID);
-        console.log(process.env.RAZORPAY_KEY_SECRET);
-
-        if (process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID?.includes("1234567890")) {
-            console.warn("Using Mock Razorpay Order");
-            return NextResponse.json({
-                order: {
-                    id: "order_mock_" + Date.now(),
-                    amount: Math.round(invoice.amount * 100),
-                    currency: "INR"
-                }
-            }, { status: 200 });
-        }
-
         const razorpay = new Razorpay({
             key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "",
             key_secret: process.env.RAZORPAY_KEY_SECRET || "",

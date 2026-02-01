@@ -17,12 +17,6 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
         const { id } = await params;
         const { razorpay_payment_id } = await req.json();
 
-        // WARNING: INSECURE IMPLEMENTATION
-        // Skipping signature verification as per request to use ONLY key_id.
-        // In production, you MUST use key_secret to verify or fetch payment details from Razorpay API.
-
-        console.warn("Skipping signature verification for Invoice:", id);
-
         const invoice = await Invoice.findById(id);
         if (!invoice) return NextResponse.json({ message: "Invoice not found" }, { status: 404 });
 

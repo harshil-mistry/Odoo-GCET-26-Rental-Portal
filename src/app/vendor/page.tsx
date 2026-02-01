@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { IProduct } from "@/types";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -10,7 +10,7 @@ import { useSearchParams } from "next/navigation";
 
 import { InvoiceList } from "@/components/invoice-list";
 
-export default function VendorDashboard() {
+function VendorDashboardContent() {
     const [products, setProducts] = useState<IProduct[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState("overview");
@@ -55,10 +55,29 @@ export default function VendorDashboard() {
         }
     }
 
-    const totalInventory = products.length;
-    const inStock = products.filter(p => p.totalStock > 0).length;
-    const activeRentals = 12;
-    const totalRevenue = 45200;
+    const [stats, setStats] = useState({
+        totalInventory: 0,
+        inStock: 0,
+        activeRentals: 0,
+        totalRevenue: 0
+    });
+
+    useEffect(() => {
+        fetchProducts();
+        fetchStats();
+    }, []);
+
+    const fetchStats = async () => {
+        try {
+            const res = await fetch("/api/vendor/stats");
+            if (res.ok) {
+                const data = await res.json();
+                setStats(data.stats);
+            }
+        } catch (error) {
+            console.error("Failed to fetch stats", error);
+        }
+    };
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -124,10 +143,10 @@ export default function VendorDashboard() {
                     {/* Stats Grid */}
                     <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {[
-                            { label: "Total Inventory", value: totalInventory, icon: Package, color: "from-blue-500/10 to-blue-500/5", iconBg: "bg-blue-500/10", iconColor: "text-blue-500" },
-                            { label: "Active Rentals", value: activeRentals, icon: TrendingUp, color: "from-purple-500/10 to-purple-500/5", iconBg: "bg-purple-500/10", iconColor: "text-purple-500" },
-                            { label: "Items In Stock", value: inStock, icon: Eye, color: "from-emerald-500/10 to-emerald-500/5", iconBg: "bg-emerald-500/10", iconColor: "text-emerald-500" },
-                            { label: "Total Revenue", value: `₹${totalRevenue.toLocaleString()}`, icon: DollarSign, color: "from-primary/10 to-primary/5", iconBg: "bg-primary/10", iconColor: "text-primary" }
+                            { label: "Total Inventory", value: stats.totalInventory, icon: Package, color: "from-blue-500/10 to-blue-500/5", iconBg: "bg-blue-500/10", iconColor: "text-blue-500" },
+                            { label: "Active Rentals", value: stats.activeRentals, icon: TrendingUp, color: "from-purple-500/10 to-purple-500/5", iconBg: "bg-purple-500/10", iconColor: "text-purple-500" },
+                            { label: "Items In Stock", value: stats.inStock, icon: Eye, color: "from-emerald-500/10 to-emerald-500/5", iconBg: "bg-emerald-500/10", iconColor: "text-emerald-500" },
+                            { label: "Total Revenue", value: `₹${stats.totalRevenue.toLocaleString()}`, icon: DollarSign, color: "from-primary/10 to-primary/5", iconBg: "bg-primary/10", iconColor: "text-primary" }
                         ].map((stat, i) => (
                             <motion.div
                                 key={i}
@@ -257,5 +276,17 @@ export default function VendorDashboard() {
                 </motion.div>
             )}
         </motion.div>
+    );
+}
+
+export default function VendorDashboard() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="animate-spin w-10 h-10 border-2 border-primary border-t-transparent rounded-full" />
+            </div>
+        }>
+            <VendorDashboardContent />
+        </Suspense>
     );
 }
